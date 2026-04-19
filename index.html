@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DPS Bhopal – Senior Bus Route Portal</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0d2137;
+      --green: #2e7d32;
+      --gold: #f5a623;
+      --light: #f0f4f8;
+      --white: #ffffff;
+      --text: #1a2b3c;
+      --muted: #607d8b;
+      --card: #ffffff;
+      --border: #cfd8dc;
+      --accent: #1565c0;
+      --danger: #c62828;
+      --success: #388e3c;
+      --row-odd: #e8f5e9;
+      --row-even: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--light);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(135deg, var(--navy) 0%, #1a3a5c 60%, var(--green) 100%);
+      color: white;
+      padding: 18px 24px 14px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-logo {
+      width: 64px;
+      height: 64px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 28px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-title h1 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      line-height: 1.1;
+    }
+
+    .header-title p {
+      font-size: 0.82rem;
+      opacity: 0.85;
+      margin-top: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    .header-badge {
+      margin-left: auto;
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── Login Card ── */
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .login-wrap {
+      min-height: calc(100vh - 100px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .login-card {
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: 0 8px 40px rgba(13, 33, 55, 0.14);
+      padding: 40px 36px 36px;
+      width: 100%;
+      max-width: 420px;
+      border-top: 5px solid var(--green);
+    }
+
+    .login-card h2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.6rem;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .login-card .sub {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--navy);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .form-group select,
+    .form-group input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: 'Nunito', sans-serif;
+      color: var(--text);
+      background: #fafafa;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    .form-group select:focus,
+    .form-group input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
+      background: white;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--green), #1b5e20);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 1px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(46, 125, 50, 0.35);
+    }
+
+    .error-msg {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-top: 10px;
+      display: none;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* ── Dashboard ── */
+    .dashboard {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 28px 20px 48px;
+    }
+
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .dash-header h2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.55rem;
+      color: var(--navy);
+    }
+
+    .user-chip {
+      background: var(--navy);
+      color: white;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-logout {
+      background: none;
+      border: 2px solid var(--danger);
+      color: var(--danger);
+      border-radius: 8px;
+      padding: 5px 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-logout:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    /* ── Bus Search Box ── */
+    .search-box {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 28px 28px 24px;
+      box-shadow: 0 4px 24px rgba(13, 33, 55, 0.1);
+      border-left: 5px solid var(--accent);
+      margin-bottom: 28px;
+    }
+
+    .search-box h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.2rem;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .search-row .form-group {
+      margin: 0;
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .btn-search {
+      padding: 11px 24px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-search:hover {
+      background: #0d47a1;
+      transform: translateY(-1px);
+    }
+
+    /* ── Results ── */
+    #resultsArea {
+      display: none;
+    }
+
+    .bus-card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(13, 33, 55, 0.1);
+      overflow: hidden;
+      margin-bottom: 20px;
+      animation: slideUp 0.35s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .bus-card-header {
+      background: linear-gradient(135deg, var(--navy), #1a4a6e);
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .bus-badge {
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      padding: 4px 16px;
+      border-radius: 8px;
+      letter-spacing: 1px;
+    }
+
+    .bus-incharge {
+      flex: 1;
+    }
+
+    .bus-incharge .label {
+      font-size: 0.72rem;
+      opacity: 0.75;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .bus-incharge .name {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .bus-incharge .phone {
+      font-size: 0.88rem;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+
+    .attender-info {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.78rem;
+    }
+
+    .attender-info .label {
+      opacity: 0.75;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+    }
+
+    .stops-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .stops-table thead tr {
+      background: var(--green);
+      color: white;
+    }
+
+    .stops-table th {
+      padding: 10px 14px;
+      text-align: center;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+
+    .stops-table th:nth-child(2) {
+      text-align: left;
+    }
+
+    .stops-table tbody tr:nth-child(odd) {
+      background: var(--row-odd);
+    }
+
+    .stops-table tbody tr:nth-child(even) {
+      background: var(--row-even);
+    }
+
+    .stops-table tbody tr:hover {
+      background: #c8e6c9;
+    }
+
+    .stops-table td {
+      padding: 9px 14px;
+      text-align: center;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .stops-table td:nth-child(2) {
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .stops-table td.time {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 0.95rem;
+    }
+
+    .stops-table tr.school-row td {
+      background: #fff8e1;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    /* No result */
+    .no-result {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+
+    .no-result .icon {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .no-result p {
+      font-size: 1.05rem;
+    }
+
+    /* ── Teacher view: all buses ── */
+    .all-buses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .bus-mini-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 2px 10px rgba(13, 33, 55, 0.08);
+      border-left: 4px solid var(--accent);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .bus-mini-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(13, 33, 55, 0.15);
+    }
+
+    .bus-mini-card .bnum {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .bus-mini-card .bincharge {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .section-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.15rem;
+      color: var(--navy);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    @media (max-width: 520px) {
+      .header-title h1 {
+        font-size: 1.3rem;
+      }
+
+      .login-card {
+        padding: 28px 20px 24px;
+      }
+
+      .dashboard {
+        padding: 16px 12px 40px;
+      }
+
+      .search-box {
+        padding: 18px 16px;
+      }
+
+      .bus-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══════════ HEADER ═══════════ -->
+  <div class="header">
+    <div class="header-logo">🚌</div>
+    <div class="header-title">
+      <h1>Delhi Public School, Bhopal</h1>
+      <p>Senior Bus Route Portal &nbsp;•&nbsp; Summer Timings 2026-27</p>
+    </div>
+    <div class="header-badge">w.e.f. 20-04-2026</div>
+  </div>
+
+  <!-- ═══════════ LOGIN PAGE ═══════════ -->
+  <div id="loginPage" class="page active">
+    <div class="login-wrap">
+      <div class="login-card">
+        <h2>🔐 Secure Login</h2>
+        <p class="sub">Please select your role and enter your username to continue.</p>
+
+        <div class="form-group">
+          <label>Login As</label>
+          <select id="roleSelect">
+            <option value="">— Select Role —</option>
+            <option value="teacher">Teacher</option>
+            <option value="children">Children / Parent</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="usernameInput" placeholder="Enter username" autocomplete="off" />
+        </div>
+
+        <button class="btn-login" onclick="doLogin()">LOGIN →</button>
+        <div class="error-msg" id="loginError">❌ Invalid role or username. Please try again.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ DASHBOARD PAGE ═══════════ -->
+  <div id="dashPage" class="page">
+    <div class="dashboard">
+
+      <div class="dash-header">
+        <h2 id="dashTitle">Bus Route Search</h2>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <div class="user-chip" id="userChip">👤 User</div>
+          <button class="btn-logout" onclick="doLogout()">Logout</button>
+        </div>
+      </div>
+
+      <!-- Search Box -->
+      <div class="search-box">
+        <h3>🔍 Search Bus Route</h3>
+        <div class="search-row">
+          <div class="form-group">
+            <label>Bus Number</label>
+            <input type="text" id="busInput" placeholder="e.g. S-1 or 1 or 15" oninput="liveSearch()" />
+          </div>
+          <button class="btn-search" onclick="searchBus()">Search</button>
+        </div>
+      </div>
+
+      <!-- Teacher quick-grid -->
+      <div id="teacherGrid" style="display:none;">
+        <div class="section-title">📋 All Bus Routes (Click to View)</div>
+        <div class="all-buses-grid" id="allBusesGrid"></div>
+      </div>
+
+      <!-- Results -->
+      <div id="resultsArea">
+        <div class="section-title" id="resultsTitle">Results</div>
+        <div id="resultsContainer"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════
+    //  USERS
+    // ═══════════════════════════════════════════════════════════
+    const USERS = {
+      teacher: ["teacher", "admin", "principal", "staff", "dpsbpl"],
+      children: ["student", "child", "parent", "dps", "xyz", "kid"]
+    };
+
+    // ═══════════════════════════════════════════════════════════
+    //  BUS DATA  (all 61 routes)
+    // ═══════════════════════════════════════════════════════════
+    const BUS_DATA = [
+      {
+        bus: "S-1", incharge: "Ms. SONA KAPOOR", phone: "9406518288",
+        stops: [
+          { am: "06:15", stop: "SAGAR AVENUE (MAIN ROAD)", pm: "01:20" },
+          { am: "06:17", stop: "PINK CITY", pm: "01:18" },
+          { am: "06:18", stop: "SHIV ENCLAVE", pm: "01:17" },
+          { am: "06:20", stop: "KAKDA ABHINAV HOMES", pm: "01:15" },
+          { am: "06:21", stop: "SAGAR ESTATE", pm: "01:14" },
+          { am: "06:52", stop: "NANKYE PETROL PUMP / GEMON", pm: "12:43" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-2", incharge: "Ms. SHRIYANSHI SHARMA", phone: "8461063299",
+        stops: [
+          { am: "06:20", stop: "SAHARA ESTATE / BRITISH PARK", pm: "01:15" },
+          { am: "06:25", stop: "INDUS TOWN", pm: "01:10" },
+          { am: "06:30", stop: "MISROD POLICE THANA", pm: "01:05" },
+          { am: "06:33", stop: "CORAL WOODS", pm: "01:02" },
+          { am: "06:37", stop: "CHINAR FORTUNE (INSIDE) SHOPPING MALL", pm: "12:58" },
+          { am: "06:45", stop: "PARAS HERMITAGE", pm: "12:50" },
+          { am: "06:46", stop: "AHMEDPUR CROSSING", pm: "12:49" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-3", incharge: "Ms. SWATI VAISHNAV", phone: "7974596971", attender: "Ms. TARANNUM JAHAN", attenderPhone: "8770776213",
+        stops: [
+          { am: "06:30", stop: "ONE TREE HILLS", pm: "01:05" },
+          { am: "06:35", stop: "BAIRAGARH (POLICE STATION)", pm: "01:00" },
+          { am: "06:40", stop: "BAIRAGARH PETROL PUMP", pm: "12:55" },
+          { am: "06:45", stop: "RK HOTEL / TATA SHOWROOM HALALPURA", pm: "12:50" },
+          { am: "06:50", stop: "LALGHATI PETROL PUMP / VIJAY NAGAR", pm: "12:45" },
+          { am: "06:55", stop: "KARBALA VIP ROAD", pm: "12:40" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-4", incharge: "Ms. GEETA BHAT", phone: "7354806635",
+        stops: [
+          { am: "06:20", stop: "SIGNATURE CITY, KATARA HILLS", pm: "01:15" },
+          { am: "06:22", stop: "PARK CITY", pm: "01:13" },
+          { am: "06:24", stop: "SILVER ESTATE VERTICA", pm: "01:11" },
+          { am: "06:27", stop: "KATARA HILLS", pm: "01:08" },
+          { am: "06:30", stop: "MEENAKSHI PLANET CITY", pm: "01:05" },
+          { am: "06:32", stop: "BAGMUGALIA PETROL PUMP", pm: "01:03" },
+          { am: "06:35", stop: "KRISHNA ARCADE", pm: "01:00" },
+          { am: "06:38", stop: "SURENDRA GARDEN", pm: "12:57" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-5", incharge: "Ms. GURPREET ARORA (I/C)", phone: "9617700010",
+        stops: [
+          { am: "06:40", stop: "SHALIMAR ENCLAVE", pm: "12:55" },
+          { am: "06:41", stop: "PARAS CITY", pm: "12:54" },
+          { am: "06:42", stop: "E-3 ARERA COLONY", pm: "12:53" },
+          { am: "06:55", stop: "VAISHALI NAGAR / SURUCHI NAGAR", pm: "12:40" },
+          { am: "07:00", stop: "KAMLA NAGAR (THANA)", pm: "12:35" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-6", incharge: "Ms. SHAMPA DUTTA", phone: "9826631245",
+        stops: [
+          { am: "06:35", stop: "PARAS MAJESTIC (MAIN ROAD)", pm: "01:00" },
+          { am: "06:37", stop: "SHUBHALAY (RAJEEV GANDHI)", pm: "12:58" },
+          { am: "06:40", stop: "GULMOLAR COLONY", pm: "12:55" },
+          { am: "06:45", stop: "TRILANGA POST OFFICE / BANK OF BARODA", pm: "12:50" },
+          { am: "07:00", stop: "AAKRITI GARDEN / IIFM", pm: "12:35" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-7", incharge: "Ms. ASMITA KAUR (I/C)", phone: "7999684477",
+        stops: [
+          { am: "06:25", stop: "SUNRISE COLONY SAHAR APARTMENT", pm: "01:10" },
+          { am: "06:30", stop: "VIMAL NURSING HOME, IDGAH HILLS", pm: "01:05" },
+          { am: "06:35", stop: "TRIPTI APARTMENT", pm: "01:00" },
+          { am: "06:40", stop: "IDGAH HILLS MASJID", pm: "12:55" },
+          { am: "06:43", stop: "MEENAKSHI APARTMENT, IDGAH HILLS", pm: "12:52" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-8", incharge: "Ms. SARWAT FATMA", phone: "9424412069",
+        stops: [
+          { am: "06:30", stop: "GPO, IMAMI GATE", pm: "01:05" },
+          { am: "06:35", stop: "MOTI MASJID / PEER GATE", pm: "01:00" },
+          { am: "06:40", stop: "GINNORI KAPTAN SHADI HALL", pm: "12:55" },
+          { am: "06:47", stop: "PROFESSOR COLONY", pm: "12:48" },
+          { am: "06:55", stop: "45 BUNGLOW / PALASH HOTEL", pm: "12:40" },
+          { am: "07:05", stop: "JAWAHAR CHOWK (HANUMAN MANDIR)", pm: "12:30" },
+          { am: "07:10", stop: "23 BATTALION", pm: "12:25" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-9", incharge: "Ms. MERCY NEOMI JOB", phone: "8109217192",
+        stops: [
+          { am: "06:25", stop: "AGRAWAL HOSPITAL ARERA COLONY", pm: "01:05" },
+          { am: "06:28", stop: "E-3 FRONT OF HBJ RLY CROSSING", pm: "01:02" },
+          { am: "06:30", stop: "NARMADA HOSPITAL (MILK BOOTH)", pm: "01:00" },
+          { am: "06:31", stop: "NATIONAL HOSPITAL", pm: "12:59" },
+          { am: "06:32", stop: "OLD CAMPION", pm: "12:58" },
+          { am: "06:34", stop: "OLD ALLAHABAD BANK E-1", pm: "12:56" },
+          { am: "06:37", stop: "5 NO. STOP / TULSI TOWER", pm: "12:53" },
+          { am: "06:40", stop: "NARMADA BHAWAN", pm: "12:50" },
+          { am: "06:43", stop: "GEETANJALI COMPLEX", pm: "12:47" },
+          { am: "06:45", stop: "BANK OF BARODA (KOTRA)", pm: "12:45" },
+          { am: "06:50", stop: "KOTRA (RAJEEV NAGAR)", pm: "12:40" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-10", incharge: "Ms. NAMRATA SHARMA", phone: "9826086865",
+        stops: [
+          { am: "06:30", stop: "SHIVA ROYAL COURT", pm: "01:05" },
+          { am: "06:32", stop: "MAHENDRA SQUARE", pm: "01:03" },
+          { am: "06:35", stop: "PARAS URBANE PARK", pm: "01:00" },
+          { am: "06:38", stop: "ABHINAV ARCADE", pm: "12:57" },
+          { am: "06:42", stop: "SKY DREAMS", pm: "12:53" },
+          { am: "06:43", stop: "INDUS", pm: "12:52" },
+          { am: "06:45", stop: "AASHIYANA AANGAN", pm: "12:50" },
+          { am: "06:47", stop: "ULTIMATE SKY VILLAS", pm: "12:48" },
+          { am: "06:50", stop: "INDUS EMPIRE", pm: "12:45" },
+          { am: "06:52", stop: "BABA NAGAR / SHIV MANDIR", pm: "12:43" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-11", incharge: "Ms. MAMTA PAL", phone: "9039183338",
+        stops: [
+          { am: "06:20", stop: "RLY COACH FACTORY", pm: "01:15" },
+          { am: "06:25", stop: "DWARKA NAGAR", pm: "01:10" },
+          { am: "06:30", stop: "MUSKAN TALKIES / PLATFORM NO. 1", pm: "01:05" },
+          { am: "06:32", stop: "PUSHPA NAGAR", pm: "01:03" },
+          { am: "06:43", stop: "PUNJABI BAGH", pm: "12:52" },
+          { am: "06:47", stop: "INCOME TAX OFFICE", pm: "12:48" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-12", incharge: "Ms. TEHMEENA KAMAL", phone: "9039804705",
+        stops: [
+          { am: "06:20", stop: "SUNRISE APARTMENT", pm: "01:15" },
+          { am: "06:25", stop: "CANCER HOSPITAL", pm: "01:10" },
+          { am: "06:30", stop: "LUV-KUSH APARTMENT", pm: "01:05" },
+          { am: "06:33", stop: "ST. JOSEPH CONVENT SCHOOL", pm: "01:02" },
+          { am: "06:35", stop: "IDGAH HILLS (MASJID)", pm: "01:00" },
+          { am: "06:37", stop: "PRABHU NAGAR (POLICE CHOWKI)", pm: "12:58" },
+          { am: "06:40", stop: "SHAHID BHAGAT SINGH PARK", pm: "12:55" },
+          { am: "06:45", stop: "ALL SAINT'S SCHOOL", pm: "12:50" },
+          { am: "06:53", stop: "POLYTECHNIC SQUARE", pm: "12:42" },
+          { am: "06:55", stop: "NITTTR SCIENCE CENTER ROAD", pm: "12:40" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-13", incharge: "Ms. SONALI BHAGWAT", phone: "9407273430",
+        stops: [
+          { am: "06:30", stop: "SUN CITY / INDRAPRASTHA", pm: "01:05" },
+          { am: "06:35", stop: "GOLF LINK (I & II)", pm: "01:00" },
+          { am: "06:45", stop: "LALGHATI SQUARE (NEAR MC DONALDS)", pm: "12:50" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-14", incharge: "Ms. MITIKA JHANDA", phone: "9425010512",
+        stops: [
+          { am: "06:25", stop: "RAM NAGAR COLONY (OLD COURT)", pm: "01:10" },
+          { am: "06:28", stop: "SHAHJAHANABAD (WATER TANK)", pm: "01:07" },
+          { am: "06:31", stop: "BABE ALI STADIUM / GOL GHAR", pm: "01:04" },
+          { am: "06:34", stop: "BHOPAL GATE", pm: "01:01" },
+          { am: "06:37", stop: "HAMIDIA HOSPITAL", pm: "12:58" },
+          { am: "06:39", stop: "MOTI MASJID / PEER GATE", pm: "12:56" },
+          { am: "06:41", stop: "POLYTECHNIC QUARTERS", pm: "12:54" },
+          { am: "06:43", stop: "BHARAT BHAWAN / SHYAMLA HILLS", pm: "12:52" },
+          { am: "06:48", stop: "ANSAL APARTMENT", pm: "12:47" },
+          { am: "06:50", stop: "NADIR COLONY / JUDGE COLONY", pm: "12:45" },
+          { am: "07:00", stop: "SAHAYADRI PARISAR", pm: "12:35" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-15", incharge: "Ms. NEERAJ HURA", phone: "7000101811",
+        stops: [
+          { am: "06:30", stop: "DANISH HILLS", pm: "01:05" },
+          { am: "06:38", stop: "GLOBUS CITY (KALI MANDIR)", pm: "12:57" },
+          { am: "06:40", stop: "MAYURI RESTAURANT / MANORIA HOSPITAL", pm: "12:55" },
+          { am: "06:42", stop: "RELIANCE FRESH RAM MANDIR", pm: "12:53" },
+          { am: "06:43", stop: "SUYASH HOSPITAL / GARDEN RESIDENCY", pm: "12:52" },
+          { am: "06:44", stop: "WINDSOR ESTATE, CHUNA BHATTI", pm: "12:51" },
+          { am: "06:45", stop: "EDEN GARDEN", pm: "12:50" },
+          { am: "06:48", stop: "PATRAKAR COLONY", pm: "12:47" },
+          { am: "06:50", stop: "PANCHSHEEL NAGAR", pm: "12:45" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-16", incharge: "Ms. MADHULIKA PARE", phone: "7974472922",
+        stops: [
+          { am: "06:50", stop: "ANNAPURNA COMPLEX", pm: "12:45" },
+          { am: "06:52", stop: "DWARKAPURI / VANIKA", pm: "12:43" },
+          { am: "06:55", stop: "PIPLESHWAR MANDIR SQUARE", pm: "12:40" },
+          { am: "07:00", stop: "NEHRU NAGAR (INSIDE 'D' SECTOR)", pm: "12:35" },
+          { am: "07:05", stop: "POLICE PUBLIC SCHOOL, POLICE LINE", pm: "12:30" },
+          { am: "07:08", stop: "NEHRU NAGAR (INSIDE)", pm: "12:27" },
+          { am: "07:10", stop: "PALAKMATI PARK / GOMTI COLONY", pm: "12:25" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-17", incharge: "Ms. SAIMA TARIQ", phone: "9893588138",
+        stops: [
+          { am: "06:25", stop: "KOH-E-FIZA (MINAKSHI APARTMENT)", pm: "01:10" },
+          { am: "06:30", stop: "KOH-E-FIZA (RED PETALS)", pm: "01:05" },
+          { am: "06:32", stop: "KOH-E-FIZA SANCHI PARLOUR", pm: "01:03" },
+          { am: "06:35", stop: "KOH-E-FIZA (NOOR MASJID)", pm: "01:00" },
+          { am: "06:45", stop: "KOH-E-FIZA (POLICE CHOWKI)", pm: "12:50" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-18", incharge: "Ms. NISHU NEMA", phone: "7898882465",
+        stops: [
+          { am: "06:15", stop: "CNG PETROL PUMP MAHOLI", pm: "01:20" },
+          { am: "06:17", stop: "TRAPTI ABHINAV HOMES", pm: "01:18" },
+          { am: "06:20", stop: "SAGAR LANDMARK", pm: "01:15" },
+          { am: "06:22", stop: "ECO GREEN (AYODHYA BYPASS)", pm: "01:13" },
+          { am: "06:25", stop: "NEW MINAL RESIDENCY GATE-9(5)", pm: "01:10" },
+          { am: "06:27", stop: "NEW MINAL RESIDENCY ARAKSHAN CIRCLE", pm: "01:08" },
+          { am: "06:30", stop: "NEW MINAL CIRCLE INSIDE GATE", pm: "01:05" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-19", incharge: "Ms. ASIKNI SAXENA", phone: "9329150211",
+        stops: [
+          { am: "06:25", stop: "DANISH KUNJ JAIN MANDIR", pm: "01:10" },
+          { am: "06:27", stop: "AAMRA VALLEY", pm: "01:08" },
+          { am: "06:30", stop: "AWANTIKA HOMES", pm: "01:05" },
+          { am: "06:33", stop: "SIDDHI SAFFRON CITY", pm: "01:02" },
+          { am: "06:35", stop: "SUMITRA PARISAR", pm: "01:00" },
+          { am: "06:37", stop: "GIRDHAR PARISAR", pm: "12:58" },
+          { am: "06:39", stop: "DANISH KUNJ (MP STORE)", pm: "12:56" },
+          { am: "06:40", stop: "DANISH KUNJ SUVIDHA STORE", pm: "12:55" },
+          { am: "06:43", stop: "LAXMI INDUSTRIES", pm: "12:52" },
+          { am: "06:45", stop: "MAHABALI NAGAR", pm: "12:50" },
+          { am: "06:47", stop: "MANDAKINI GATE", pm: "12:48" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-20", incharge: "Ms. NITI SHRIVASTAVA", phone: "8989010777",
+        stops: [
+          { am: "06:25", stop: "MANNIPURAM, CHAR IMLI", pm: "01:10" },
+          { am: "06:30", stop: "RAVISHANKAR NAGAR", pm: "01:05" },
+          { am: "06:35", stop: "BHOJPUR CLUB (E-1)", pm: "01:00" },
+          { am: "06:37", stop: "OLD CAMPION", pm: "12:58" },
+          { am: "06:40", stop: "10 NO. ARYA SAMAJ MANDIR", pm: "12:55" },
+          { am: "06:43", stop: "E-4 ARERA COLONY", pm: "12:52" },
+          { am: "06:47", stop: "E-4 RAJPUSHPA SCHOOL", pm: "12:48" },
+          { am: "06:50", stop: "BAGHIRA APARTMENT", pm: "12:45" },
+          { am: "06:53", stop: "AKSHAYA HOSPITAL/MANIPURAM", pm: "12:42" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-21", incharge: "Ms. RACHANA GHURAYYA", phone: "7999476101",
+        stops: [
+          { am: "06:30", stop: "BABA NAGAR, SHAHPURA", pm: "01:05" },
+          { am: "06:32", stop: "SHAHPURA (A-SECTOR)", pm: "01:03" },
+          { am: "06:33", stop: "SHAHPURA (B/SECTOR/AMALTAS)", pm: "01:02" },
+          { am: "06:35", stop: "IAS ACADEMY (SHAHPURA)", pm: "01:00" },
+          { am: "06:37", stop: "SAMARPAN HOSPITAL (MANISHA MKT)", pm: "12:58" },
+          { am: "06:38", stop: "SHEKHAR HOSPITAL (MANISHA MKT)", pm: "12:57" },
+          { am: "06:40", stop: "ART APARTMENT (MANISHA MKT)", pm: "12:55" },
+          { am: "06:41", stop: "HANGER PROJECT (MANISHA MKT)", pm: "12:54" },
+          { am: "06:43", stop: "SAI KIDS SHAHPURA", pm: "12:52" },
+          { am: "06:44", stop: "STERLING ENCL. (RAJASTHAN SWEET)", pm: "12:51" },
+          { am: "06:48", stop: "CENTRAL BANK (CAMPION SQUARE)", pm: "12:47" },
+          { am: "06:50", stop: "HANUMAN MANDIR / 1100 QUARTER", pm: "12:45" },
+          { am: "06:55", stop: "MANIT INSIDE", pm: "12:40" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-22", incharge: "Ms. MITALI ROY", phone: "9893131197",
+        stops: [
+          { am: "06:05", stop: "ABHINAV REGAL", pm: "01:30" },
+          { am: "06:09", stop: "SOS VILLAGE / TAGORE NAGAR", pm: "01:26" },
+          { am: "06:14", stop: "AMRITPURI", pm: "01:21" },
+          { am: "06:15", stop: "SHYAMA PALLI", pm: "01:20" },
+          { am: "06:16", stop: "TULSI PARISAR, AWADHPURI", pm: "01:19" },
+          { am: "06:24", stop: "CRYSTAL IDEAL CITY-1", pm: "01:11" },
+          { am: "06:27", stop: "CRYSTAL IDEAL CITY-2", pm: "01:08" },
+          { am: "06:30", stop: "CRYSTAL IDEAL CITY-3", pm: "01:05" },
+          { am: "06:37", stop: "REGAL CIVIC CENTRE", pm: "12:58" },
+          { am: "06:39", stop: "ASTHA VIHAR", pm: "12:56" },
+          { am: "06:40", stop: "REGAL TOWN", pm: "12:55" },
+          { am: "06:41", stop: "VIVEKANAND SCHOOL", pm: "12:54" },
+          { am: "06:43", stop: "VIJAY MARKET, BARKHEDA", pm: "12:52" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-23", incharge: "Ms. SANGEETA TIWARI", phone: "6266644137",
+        stops: [
+          { am: "06:30", stop: "SIGNATURE 99", pm: "01:05" },
+          { am: "06:33", stop: "JK HOSPITAL", pm: "01:02" },
+          { am: "06:35", stop: "WESTERN COURT", pm: "01:00" },
+          { am: "06:37", stop: "SARVADHARAM C-SECTOR", pm: "12:58" },
+          { am: "06:40", stop: "SIGNATURE RESIDENCY", pm: "12:55" },
+          { am: "06:44", stop: "SAGAR PREMIUM TOWER", pm: "12:51" },
+          { am: "06:46", stop: "BHOOMIKA PARISAR", pm: "12:49" },
+          { am: "06:48", stop: "MANDAKINI DENTAL CLINIC", pm: "12:47" },
+          { am: "06:53", stop: "SANCHI PARLOUR / SUNRISE HOSTEL", pm: "12:42" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-24", incharge: "Ms. KIRAN SINGH (I/C)", phone: "9827074098",
+        stops: [
+          { am: "06:35", stop: "VIRASHA HEIGHTS", pm: "01:00" },
+          { am: "06:37", stop: "RUDRAKSH PARK", pm: "12:58" },
+          { am: "06:40", stop: "MANORIA HOSPITAL", pm: "12:55" },
+          { am: "06:45", stop: "RAM MANDIR", pm: "12:50" },
+          { am: "07:00", stop: "PLATINUM PLAZA (MAIN ROAD)", pm: "12:35" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-25", incharge: "Ms. SEEMA KUNWAR", phone: "8708622692",
+        stops: [
+          { am: "06:10", stop: "3 EME CENTRE", pm: "01:25" },
+          { am: "06:25", stop: "AYAPPA MANDIR", pm: "01:10" },
+          { am: "06:30", stop: "DATA COLONY", pm: "01:05" },
+          { am: "06:38", stop: "BI'S STOP", pm: "12:57" },
+          { am: "06:50", stop: "KOH-E-FIZA (POLICE CHOWKI)", pm: "12:45" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-26", incharge: "Ms. KASHISH SHAH (I/C)", phone: "8305466889",
+        stops: [
+          { am: "06:12", stop: "PATEL NAGAR (NRI) / PRABHATAM HEIGHTS", pm: "01:23" },
+          { am: "06:20", stop: "SWASTIK HOSPITAL", pm: "01:15" },
+          { am: "06:21", stop: "ISHAN PARK", pm: "01:14" },
+          { am: "06:23", stop: "SIDDHARTH LAKE CITY", pm: "01:12" },
+          { am: "06:24", stop: "OMEGA CAMPUS", pm: "01:11" },
+          { am: "06:28", stop: "ANAND NAGAR (POLICE CHOWKI)", pm: "01:07" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-27", incharge: "Ms. NEENA MISHRA", phone: "8989792329",
+        stops: [
+          { am: "06:30", stop: "AASHIMA DIVINE CITY, BAGMUGALIYA", pm: "01:05" },
+          { am: "06:32", stop: "RUCHI LIFE ESCAPE JATKHEDI", pm: "01:03" },
+          { am: "06:40", stop: "SHRIRAM COLONY GATE", pm: "12:55" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-28", incharge: "Ms. TOSHI PANDYA", phone: "9754218968",
+        stops: [
+          { am: "06:40", stop: "GREEN HEIGHTS", pm: "12:55" },
+          { am: "06:45", stop: "GREEN CITY", pm: "12:50" },
+          { am: "06:58", stop: "RIVIERA TOWN / NIVESH NAGAR", pm: "12:37" },
+          { am: "07:00", stop: "SURUCHI NAGAR", pm: "12:35" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-29", incharge: "Ms. DEBJANI DIWAN", phone: "9770384183",
+        stops: [
+          { am: "06:15", stop: "CANAL KINSHIP", pm: "01:20" },
+          { am: "06:17", stop: "SHIV AANGAN", pm: "01:18" },
+          { am: "06:20", stop: "CHINAR SAPPHIRE", pm: "01:15" },
+          { am: "06:25", stop: "SHUBHALAY VIHAR", pm: "01:10" },
+          { am: "06:32", stop: "FORTUNE SIGNATURE GATE 1 & 2", pm: "01:03" },
+          { am: "06:35", stop: "INDUS GARDEN (E-8)", pm: "01:00" },
+          { am: "06:38", stop: "FORTUNE GLORY", pm: "12:57" },
+          { am: "06:40", stop: "LAXMI PARISAR / INDUS EMPIRE-III", pm: "12:55" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-30", incharge: "Ms. VEENA RAI SINGH", phone: "9977959032",
+        stops: [
+          { am: "06:20", stop: "NIRUPAM ROYAL PALMS", pm: "01:15" },
+          { am: "06:24", stop: "NIKHIL NESTLE", pm: "01:11" },
+          { am: "06:27", stop: "FORTUNE KASTURI", pm: "01:08" },
+          { am: "06:32", stop: "SHALIMAR FORTLEZA", pm: "01:03" },
+          { am: "06:34", stop: "SAGAR ROYAL VILLAS", pm: "01:01" },
+          { am: "06:37", stop: "AASHIMA MALL", pm: "12:58" },
+          { am: "06:40", stop: "SAGAR ROYAL HOMES GATE-2", pm: "12:55" },
+          { am: "06:42", stop: "KENDRIYA VIDYALAY-3", pm: "12:53" },
+          { am: "06:44", stop: "SHUBHALAYA", pm: "12:51" },
+          { am: "06:47", stop: "SURENDRA PALACE", pm: "12:48" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-31", incharge: "Ms. SARIKA AMLAVAD", phone: "9479555065",
+        stops: [
+          { am: "06:20", stop: "SAGAR ESTATE", pm: "01:15" },
+          { am: "06:22", stop: "NEW MINAL (GATE NO. 4)", pm: "01:13" },
+          { am: "06:26", stop: "NEW MINAL WATER TANK", pm: "01:09" },
+          { am: "06:28", stop: "NEW MINAL CIRCLE", pm: "01:07" },
+          { am: "06:30", stop: "OLD MINAL WATER TANK", pm: "01:05" },
+          { am: "06:32", stop: "OLD MINAL MOGLI PARK", pm: "01:03" },
+          { am: "06:34", stop: "OLD MINAL TOP-N-TOWN", pm: "01:01" },
+          { am: "06:36", stop: "KWALITY SWEETS GATE-1", pm: "12:59" },
+          { am: "06:38", stop: "DURGESH VIHAR", pm: "12:57" },
+          { am: "06:40", stop: "RAM MANDIR", pm: "12:55" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-32", incharge: "Ms. MAMTA GOURH", phone: "9752702148",
+        stops: [
+          { am: "06:40", stop: "SARVADHARAM COLONY", pm: "12:55" },
+          { am: "06:42", stop: "JANKI RESIDENCY", pm: "12:53" },
+          { am: "06:45", stop: "PALACE ORCHARD", pm: "12:50" },
+          { am: "06:47", stop: "CI PARK VIEW (MILK BOOTH)", pm: "12:48" },
+          { am: "06:52", stop: "AMARNATH COLONY", pm: "12:43" },
+          { am: "06:55", stop: "CAPITOL HILLS / SAGAR GREENS", pm: "12:40" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-33", incharge: "Ms. BHAVANA NARWANI (I/C)", phone: "7905872377",
+        stops: [
+          { am: "06:20", stop: "DWARKADHAM NEAR JAIL RD. INSIDE", pm: "01:15" },
+          { am: "06:22", stop: "DWARKA DHAM GATE-II", pm: "01:13" },
+          { am: "06:25", stop: "DWARKA DHAM GATE-I", pm: "01:10" },
+          { am: "06:30", stop: "ADITYA AVENUE", pm: "01:05" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-34", incharge: "Ms. PADMAJA N.", phone: "9644284010",
+        stops: [
+          { am: "06:30", stop: "PRIYADARSHINI ADHISTHAN", pm: "01:05" },
+          { am: "06:35", stop: "PRADHAN URBAN", pm: "01:00" },
+          { am: "06:36", stop: "VISHNU HI-TECH CITY", pm: "12:59" },
+          { am: "06:38", stop: "DANAPANI RESTAURANT", pm: "12:57" },
+          { am: "06:42", stop: "BHARAT NAGAR GATE / BASANT KUNJ", pm: "12:53" },
+          { am: "06:45", stop: "12 NO. STOP", pm: "12:50" },
+          { am: "06:47", stop: "SANCHI MILK PARLOUR / SAI BABA BOARD", pm: "12:48" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-35", incharge: "Ms. MANISHA KHEDE (I/C)", phone: "9899191143",
+        stops: [
+          { am: "06:22", stop: "AAKRITI ECOCITY (MAIN GATE)", pm: "01:13" },
+          { am: "06:25", stop: "AAKRITI BLUE SKY", pm: "01:10" },
+          { am: "06:30", stop: "AAKRITI MERIDIAN", pm: "01:05" },
+          { am: "06:32", stop: "AAKRITI GOLD VILLA", pm: "01:03" },
+          { am: "06:34", stop: "AAKRITI PREMIUM", pm: "01:01" },
+          { am: "06:36", stop: "TRINITY HOSPITAL", pm: "12:59" },
+          { am: "06:37", stop: "STAR HOMES", pm: "12:58" },
+          { am: "06:40", stop: "COMFORT PALMS", pm: "12:55" },
+          { am: "06:45", stop: "THANA SHAHPURA", pm: "12:50" },
+          { am: "07:00", stop: "MENDORI BUNGALOW", pm: "12:35" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-36", incharge: "Ms. POOJA NEMA (I/C)", phone: "8718056401",
+        stops: [
+          { am: "06:25", stop: "TEELA JAMALPURA", pm: "01:10" },
+          { am: "06:40", stop: "GUFA MANDIR", pm: "12:55" },
+          { am: "06:42", stop: "GOLF LINK (I & II)", pm: "12:53" },
+          { am: "06:45", stop: "SAHAJ SANGAM APARTMENT", pm: "12:50" },
+          { am: "06:47", stop: "SUDITI HOSPITAL / VIJAY NAGAR", pm: "12:48" },
+          { am: "06:50", stop: "DOMINOS, LALGHATI", pm: "12:45" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-37", incharge: "Ms. ARUNA KHARE", phone: "9926099121",
+        stops: [
+          { am: "06:20", stop: "SCHOLAR HOME (MAIN ROAD)", pm: "01:15" },
+          { am: "06:23", stop: "7 NO. STOP (MAHAVIR DWAR)", pm: "01:12" },
+          { am: "06:25", stop: "NUTAN COLLEGE (SBI ATM)", pm: "01:10" },
+          { am: "06:30", stop: "6 NO. MARKET / ANKUR COMPLEX", pm: "01:05" },
+          { am: "06:32", stop: "5 NO. VISHWANATH MANDIR", pm: "01:03" },
+          { am: "06:40", stop: "1250 HOSPITAL", pm: "12:55" },
+          { am: "06:45", stop: "2nd STOP MARKET / NAVIN H.S. SCHOOL", pm: "12:50" },
+          { am: "06:47", stop: "HARSHWARDHAN NR. SAI MANDIR", pm: "12:48" },
+          { am: "06:52", stop: "SANJAY COMPLEX", pm: "12:43" },
+          { am: "06:55", stop: "ARADHANA NAGAR / JEEVAN JYOTI", pm: "12:40" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-38", incharge: "Ms. SANGEETA WAGHMARE", phone: "9424418721",
+        stops: [
+          { am: "06:30", stop: "KASTURBA NAGAR / CHETAK BRIDGE", pm: "01:05" },
+          { am: "06:35", stop: "RANTHAMBOR COMPLEX", pm: "01:00" },
+          { am: "06:40", stop: "PRAGATI PETROL PUMP", pm: "12:55" },
+          { am: "06:45", stop: "MAHADEV APARTMENT / KILANDEV APARTMENT", pm: "12:50" },
+          { am: "06:50", stop: "PARUL HOSPITAL (SANKAR NAGAR)", pm: "12:45" },
+          { am: "06:55", stop: "SHIVAJI NAGAR / PRANAMI MANDIR", pm: "12:40" },
+          { am: "06:57", stop: "MATA MANDIR SQUARE", pm: "12:38" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-39", incharge: "Ms. ZEBA ZAFFAR (I/C)", phone: "7898667819", attender: "Ms. SHAHEEN", attenderPhone: "7223019809",
+        stops: [
+          { am: "06:25", stop: "AHMEDABAD PALACE", pm: "01:10" },
+          { am: "06:26", stop: "KOH-E-FIZA (SAFIA GATE NO.1)", pm: "01:09" },
+          { am: "06:28", stop: "KOH-E-FIZA (TOP & TOWN)", pm: "01:07" },
+          { am: "06:30", stop: "KOHEFIZA (REGALIA HEIGHT SUFIA MASJID)", pm: "01:05" },
+          { am: "06:32", stop: "KOH-E-FIZA (RADIANT)", pm: "01:03" },
+          { am: "06:35", stop: "KOH-E-FIZA (BADSHAH APARTMENT)", pm: "01:00" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-40", incharge: "Ms. SHAZIA ALI", phone: "8319967208",
+        stops: [
+          { am: "06:25", stop: "GREEN PARK / PUSHPA NAGAR", pm: "01:10" },
+          { am: "06:30", stop: "ASHOKA GARDEN (PARIHAR C.)", pm: "01:05" },
+          { am: "06:35", stop: "SUBHASH NR. (PADMANABH NR.)", pm: "01:00" },
+          { am: "06:40", stop: "SUBHASH NR. (RLY CROSSING)", pm: "12:55" },
+          { am: "06:45", stop: "RACHNA NAGAR (GANESH MANDIR)", pm: "12:50" },
+          { am: "06:48", stop: "GAUTAM NAGAR I & II", pm: "12:47" },
+          { am: "06:50", stop: "GAUTAM NAGAR (OIL FED. / HIG) III", pm: "12:45" },
+          { am: "06:55", stop: "VYAPAM SQUARE", pm: "12:40" },
+          { am: "06:58", stop: "T T NAGAR POLICE STATION", pm: "12:37" },
+          { am: "07:08", stop: "SURAJ NAGAR SQUARE", pm: "12:27" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-41", incharge: "Ms. NEETU SEHGAL", phone: "9340971519",
+        stops: [
+          { am: "06:20", stop: "BERCHHA SWEETS TILAK NAGAR / VICE ROY PARK", pm: "01:15" },
+          { am: "06:25", stop: "SOUTH AVENUE", pm: "01:10" },
+          { am: "06:30", stop: "ALBERT EKKA / SAVOY COMPLEX / SAGAR PARADISE", pm: "01:05" },
+          { am: "06:33", stop: "BHARAT NAGAR", pm: "01:02" },
+          { am: "06:35", stop: "BASANT KUNJ", pm: "01:00" },
+          { am: "06:38", stop: "HOUSING BOARD (E-8)", pm: "12:57" },
+          { am: "06:40", stop: "CENTRAL BANK (INSIDE)", pm: "12:55" },
+          { am: "06:45", stop: "PARIKA SOCIETY PHASE-I", pm: "12:50" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-42", incharge: "Ms. RESHU SINHA", phone: "9425078960",
+        stops: [
+          { am: "06:15", stop: "FORTUNE LANDMARK", pm: "01:20" },
+          { am: "06:20", stop: "SAGAR LIFE STYLE", pm: "01:15" },
+          { am: "06:24", stop: "RUDRAKSH KASTURI", pm: "01:11" },
+          { am: "06:25", stop: "SHIVA ROYAL PARK", pm: "01:10" },
+          { am: "06:28", stop: "AAKRITI GREENS / LIFESTYLE BLU", pm: "01:07" },
+          { am: "06:34", stop: "MAHENDRA AMPLE PARK", pm: "01:01" },
+          { am: "06:38", stop: "BDA COLONY (MAIN ROAD)", pm: "12:57" },
+          { am: "06:40", stop: "AAKRITI FLAMINGO", pm: "12:55" },
+          { am: "06:42", stop: "AAKRITI ECOCITY (MAIN GATE) / SAGE HERITAGE", pm: "12:53" },
+          { am: "06:45", stop: "CBSE OFFICE", pm: "12:50" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-43", incharge: "Ms. RITU SHARMA (I/C)", phone: "7350282994", attender: "Ms. ANEETA PUJAREE", attenderPhone: "7770969299",
+        stops: [
+          { am: "06:35", stop: "GUJRATI COLONY", pm: "01:00" },
+          { am: "06:36", stop: "D.K. COTTAGE / KHANUJA ENCLAVE", pm: "12:59" },
+          { am: "06:37", stop: "D.K. DEVASTHALI", pm: "12:58" },
+          { am: "06:39", stop: "D.K. DEVASTHALI GATE", pm: "12:56" },
+          { am: "06:44", stop: "AKANSHA ENCLAVE", pm: "12:51" },
+          { am: "06:47", stop: "10 NO. STOP (NR. FLOWER SHOPS)", pm: "12:48" },
+          { am: "06:53", stop: "BITTAN MARKET SQUARE", pm: "12:42" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-44", incharge: "Ms. ARCHANA KOLKOTWAR", phone: "7898015407",
+        stops: [
+          { am: "06:15", stop: "WINDSOR PALMS", pm: "01:20" },
+          { am: "06:20", stop: "SOUMYA EVERGREEN", pm: "01:15" },
+          { am: "06:25", stop: "MADHUBAN CITY", pm: "01:10" },
+          { am: "06:27", stop: "JANKI APARTMENT", pm: "01:08" },
+          { am: "06:29", stop: "FINE AVENUE NAYAPURA", pm: "01:06" },
+          { am: "06:30", stop: "LALITA NAGAR / LOTUS HOSPITAL", pm: "01:05" },
+          { am: "06:32", stop: "D.K. HONEY HOMES", pm: "01:03" },
+          { am: "06:42", stop: "SHALIMAR GARDEN", pm: "12:53" },
+          { am: "06:44", stop: "NEHAR CHUNA BHATTI", pm: "12:51" },
+          { am: "06:45", stop: "CI ENCLAVE / JANKI ENCLAVE", pm: "12:50" },
+          { am: "06:46", stop: "CHINAR WOODLAND", pm: "12:49" },
+          { am: "06:47", stop: "SUYASH HOSPITAL / GARDEN RESIDENCY", pm: "12:48" },
+          { am: "06:48", stop: "DR. GNS MODEL TOWN / QURA DIAGONALS / CI VILLA", pm: "12:47" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-45", incharge: "Ms. SHWETA GULATI (I/C)", phone: "7869909367",
+        stops: [
+          { am: "06:45", stop: "RBI (CHAR IMLI)", pm: "12:50" },
+          { am: "06:48", stop: "CHAR IMLI (SAURABH PARLOUR)", pm: "12:47" },
+          { am: "06:50", stop: "CHAR IMLI (SHIV MANDIR)", pm: "12:45" },
+          { am: "06:55", stop: "CHAR IMLI (IAS GUEST HOUSE)", pm: "12:40" },
+          { am: "06:58", stop: "CHAR IMLI (UPANT COLONY)", pm: "12:37" },
+          { am: "07:00", stop: "CHAR IMLI (P & T COLONY)", pm: "12:35" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-46", incharge: "Ms. ANKITA K.", phone: "8894825040",
+        stops: [
+          { am: "06:15", stop: "11 NO. STOP", pm: "01:20" },
+          { am: "06:20", stop: "BAGHIRA APARTMENT", pm: "01:15" },
+          { am: "06:25", stop: "ARERA PETROL PUMP", pm: "01:10" },
+          { am: "06:28", stop: "CHAR IMLI (SBI COLONY)", pm: "01:07" },
+          { am: "06:30", stop: "CHAR IMLI (HANUMAN MANDIR)", pm: "01:05" },
+          { am: "06:33", stop: "CHAR IMLI (UPANT COLONY)", pm: "01:02" },
+          { am: "06:35", stop: "CHAR IMLI (SAURABH PARLOUR)", pm: "01:00" },
+          { am: "06:38", stop: "CHAR IMLI (RADHA SWAMI ASHRAM)", pm: "12:57" },
+          { am: "06:40", stop: "CHAR IMLI (EKANT PARK)", pm: "12:55" },
+          { am: "06:42", stop: "AG COLONY / P&T SQUARE", pm: "12:53" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-47", incharge: "Ms. SHILPA AAILANI", phone: "7770823466",
+        stops: [
+          { am: "06:15", stop: "ELIXIR GARDEN NEW JAIL ROAD", pm: "01:20" },
+          { am: "06:17", stop: "MAPLE TREE (NEW JAIL ROAD)", pm: "01:18" },
+          { am: "06:32", stop: "COLONEL'S COLONY / ASHARAM BAPU", pm: "01:03" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-48", incharge: "Ms. NISHI SHARMA", phone: "9993794333",
+        stops: [
+          { am: "06:22", stop: "NARIYAL KHEDA", pm: "01:13" },
+          { am: "06:25", stop: "GANDHI SQUARE", pm: "01:10" },
+          { am: "06:30", stop: "SELECTION CENTRE OFFICERS MESS", pm: "01:05" },
+          { am: "06:38", stop: "NEVRI MANDIR", pm: "12:57" },
+          { am: "06:40", stop: "CHRIST MEMORIAL SCHOOL", pm: "12:55" },
+          { am: "06:42", stop: "GOLF LINK PHASE-2 LALGHATI", pm: "12:53" },
+          { am: "06:50", stop: "KHANUGAON", pm: "12:45" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-49", incharge: "Ms. NUPUR S. CHANDRAN", phone: "9981049559", attender: "Ms. ASHA YADAV", attenderPhone: "6261770285",
+        stops: [
+          { am: "05:45", stop: "BERASIA ROAD, NAVI BAGH", pm: "01:50" },
+          { am: "05:50", stop: "LAMBAKHEDA", pm: "01:45" },
+          { am: "05:55", stop: "LEELAWATI MEMORIAL HOSPITAL", pm: "01:40" },
+          { am: "06:10", stop: "HOUSING BOARD / KAROND SQUARE", pm: "01:25" },
+          { am: "06:15", stop: "BMHRC (INSIDE)", pm: "01:20" },
+          { am: "06:20", stop: "SUKHSAGAR / PRIMIER ORCHARD GATE, KAROND", pm: "01:15" },
+          { am: "06:24", stop: "PEOPLE'S HOSPITAL (INSIDE)", pm: "01:11" },
+          { am: "06:30", stop: "DIG BUNGALOW", pm: "01:05" },
+          { am: "06:32", stop: "SINDHI COLONY (DEVI MANDIR)", pm: "01:03" },
+          { am: "06:35", stop: "PUNJAB BOOT HOUSE", pm: "01:00" },
+          { am: "06:40", stop: "LILY TALKIES", pm: "12:55" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-50", incharge: "Ms. SWETA NANDAN", phone: "9981969151",
+        stops: [
+          { am: "06:30", stop: "PANCHWATI COLONY (BHOPAL GIRLS SCHOOL)", pm: "01:05" },
+          { am: "06:32", stop: "PANCHWATI COLONY (TOP-N-TOWN)", pm: "01:03" },
+          { am: "06:40", stop: "PANCHWATI COLONY (GYM KHANA)", pm: "12:55" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-51", incharge: "Ms. NEENA LIKHI", phone: "9301494074",
+        stops: [
+          { am: "06:15", stop: "K-SECTOR AYODHYA NAGAR", pm: "01:20" },
+          { am: "06:20", stop: "ISRO GUEST HOUSE AYODHYA NAGAR", pm: "01:15" },
+          { am: "06:23", stop: "JAIN MANDIR", pm: "01:12" },
+          { am: "06:27", stop: "REGAL TRASURE", pm: "01:08" },
+          { am: "06:29", stop: "TANAATAN DHABA", pm: "01:06" },
+          { am: "06:31", stop: "BHEL NAGAR / RAJEEV NAGAR", pm: "01:04" },
+          { am: "06:33", stop: "PIPLANI PETROL PUMP", pm: "01:02" },
+          { am: "06:35", stop: "ESI (HOSPITAL / POST OFFICE)", pm: "01:00" },
+          { am: "06:40", stop: "JUBILEE GATE / INDRAPURI GATE-1", pm: "12:55" },
+          { am: "06:46", stop: "J.K. ROAD CROSSING", pm: "12:49" },
+          { am: "06:48", stop: "BHARTI NIKETAN (SECURITY LINE)", pm: "12:47" },
+          { am: "06:50", stop: "JAWAHAR BAL BHAWAN", pm: "12:45" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-52", incharge: "Ms. ANITA PRASAD", phone: "9425606819",
+        stops: [
+          { am: "06:30", stop: "VEDWATI COLONY BDA", pm: "01:05" },
+          { am: "06:32", stop: "MGM SCHOOL AWADHPURI", pm: "01:03" },
+          { am: "06:34", stop: "SOUMYA ESTATE / TULSI VIHAR", pm: "01:01" },
+          { am: "06:35", stop: "VIDHYASAGAR INSTITUTE", pm: "01:00" },
+          { am: "06:37", stop: "SURBHI AVENUE", pm: "12:58" },
+          { am: "06:39", stop: "AADHARSILA", pm: "12:56" },
+          { am: "06:42", stop: "ABHINASH NAGAR (RISHIPURAM PH-1)", pm: "12:53" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-53", incharge: "Ms. SHIKHA JHA", phone: "6266711415", attender: "Ms. ARCHANA MANJHI", attenderPhone: "7691958802",
+        stops: [
+          { am: "06:20", stop: "IISER MAIN GATE", pm: "01:15" },
+          { am: "06:25", stop: "BHORI JOD", pm: "01:10" },
+          { am: "06:30", stop: "CHIRAYU MEDICAL COLLEGE", pm: "01:05" },
+          { am: "06:35", stop: "BAIRAGARH UNION BANK", pm: "01:00" },
+          { am: "06:36", stop: "BAIRAGARH KALI MANDIR", pm: "12:59" },
+          { am: "06:37", stop: "BAIRAGARH CHANCHAL SQUARE", pm: "12:58" },
+          { am: "06:38", stop: "BAIRAGARH POLICE STATION", pm: "12:57" },
+          { am: "06:39", stop: "BAIRAGARH WATER TANK", pm: "12:56" },
+          { am: "06:40", stop: "BAPU KI KUTIYA / RAJDEEP HOSPITAL", pm: "12:55" },
+          { am: "06:42", stop: "HALALPURA BUS STAND", pm: "12:53" },
+          { am: "06:45", stop: "TATA SHOWROOM HALALPURA", pm: "12:50" },
+          { am: "06:48", stop: "KOHEFIZA AAPURTI SUPER MKT", pm: "12:47" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-54", incharge: "Ms. KULDEEP KAUR", phone: "9406822384",
+        stops: [
+          { am: "06:35", stop: "ARVIND VIHAR (ONDOOR)", pm: "01:00" },
+          { am: "06:36", stop: "ARVIND VIHAR (PRASAD MARG)", pm: "12:59" },
+          { am: "06:37", stop: "ARVIND VIHAR (MAHISHMATI)", pm: "12:58" },
+          { am: "06:40", stop: "EMERALD PARK CITY GATE-1", pm: "12:55" },
+          { am: "06:42", stop: "EMERALD PARK CITY GATE-2", pm: "12:53" },
+          { am: "06:43", stop: "BDA COMPLEX", pm: "12:52" },
+          { am: "06:46", stop: "SAKET NAGAR 9-A", pm: "12:49" },
+          { am: "06:48", stop: "SAGAR PUBLIC SCHOOL", pm: "12:47" },
+          { am: "06:50", stop: "NEURO CITY HOSPITAL", pm: "12:45" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-55", incharge: "Ms. KIRAN SANDHU", phone: "9301721599",
+        stops: [
+          { am: "06:25", stop: "GOVINDPURA BUS STOP", pm: "01:10" },
+          { am: "06:28", stop: "BIJALI COLONY GATE (GOVINDPURA)", pm: "01:07" },
+          { am: "06:30", stop: "APSARA TALKIES / SHALIMAR GATE", pm: "01:05" },
+          { am: "06:32", stop: "HOTEL SILVER INN", pm: "01:03" },
+          { am: "06:35", stop: "CAPITAL PETROL PUMP / AISH BAGH", pm: "01:00" },
+          { am: "06:35", stop: "JINSI SQUARE (DHARAM KATA)", pm: "01:00" },
+          { am: "06:37", stop: "JINSI P. CHOWKI JAHANGIRABAD", pm: "12:58" },
+          { am: "06:37", stop: "RAMBHA TALKIES", pm: "12:58" },
+          { am: "06:40", stop: "VARDAN HOSPITAL", pm: "12:55" },
+          { am: "06:45", stop: "AIRTEL OFFICE / MALVIYA NAGAR / POLICE OFFICERS MESS", pm: "12:50" },
+          { am: "06:45", stop: "ROSHANPURA BUS STOP", pm: "12:50" },
+          { am: "06:47", stop: "BETWA APARTMENT / GTB COMPLEX", pm: "12:48" },
+          { am: "06:48", stop: "RANG MAHAL TALKIES", pm: "12:47" },
+          { am: "06:49", stop: "OLD MLA QUA. (YADAV MEDICAL)", pm: "12:46" },
+          { am: "06:51", stop: "JHARNESHWARI COLONY / GOMANTIKA", pm: "12:44" },
+          { am: "06:53", stop: "UNIQUE COLLEGE / DEPO SQUARE", pm: "12:42" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-56", incharge: "Ms. SUSHMA SINGH (I/C)", phone: "9926435699",
+        stops: [
+          { am: "06:15", stop: "SWAMI VIVEKANAND PARISAR, KATARA", pm: "01:20" },
+          { am: "06:25", stop: "PEBBLE BAY PHASE-I", pm: "01:10" },
+          { am: "06:28", stop: "PEBBLE BAY DREAM VILLAS", pm: "01:07" },
+          { am: "06:30", stop: "BHAWANI CHOWK", pm: "01:05" },
+          { am: "06:31", stop: "PEBBLE BAY PHASE-II", pm: "01:04" },
+          { am: "06:32", stop: "AASHIMA DEVINE CITY", pm: "01:03" },
+          { am: "06:39", stop: "AYODHYA ASHRYA", pm: "12:56" },
+          { am: "06:40", stop: "SHREE GOLDEN CITY PRIMA", pm: "12:55" },
+          { am: "06:42", stop: "SAGAR PEARL", pm: "12:53" },
+          { am: "06:43", stop: "SWADESH RED SQUARE JATKHEDI", pm: "12:52" },
+          { am: "06:44", stop: "HANUMAN NAGAR", pm: "12:51" },
+          { am: "06:49", stop: "DANISH NAGAR - I", pm: "12:46" },
+          { am: "06:50", stop: "DANISH NAGAR - II", pm: "12:45" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-57", incharge: "Ms. DEEPIKA MISHRA", phone: "9399912778",
+        stops: [
+          { am: "06:30", stop: "GLOBUS GREEN ACRES", pm: "01:05" },
+          { am: "06:40", stop: "MUNSHI PREMCHAND PARISAR BDA COLONY, AIRPORT ROAD", pm: "12:55" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-58", incharge: "Ms. NEELU CHUGH (I/C)", phone: "9826941731",
+        stops: [
+          { am: "06:30", stop: "SAKET NAGAR (DURGA MANDIR)", pm: "01:05" },
+          { am: "06:33", stop: "SHAKTI NAGAR (PANCHWATI MARKET)", pm: "01:02" },
+          { am: "06:35", stop: "SAKET NAGAR (SHIV MANDIR/JAIN MANDIR)", pm: "01:00" },
+          { am: "06:37", stop: "ALKAPURI GATE NO.-1", pm: "12:58" },
+          { am: "06:40", stop: "SHAKTI NAGAR (SHOPPING COMPLEX)", pm: "12:55" },
+          { am: "06:42", stop: "DRM / BSSS COLLEGE / RAILWAY COLONY", pm: "12:53" },
+          { am: "06:45", stop: "KASTURBA HOSPITAL (BHEL)", pm: "12:50" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-59", incharge: "Ms. SMRITI TIWARI", phone: "9893314789",
+        stops: [
+          { am: "06:27", stop: "NARELA SHANKARI SQUARE", pm: "01:08" },
+          { am: "06:29", stop: "SRAVAN KANTA (NIZAMUDDIN)", pm: "01:06" },
+          { am: "06:35", stop: "SACHIDANAND NAGAR", pm: "01:00" },
+          { am: "06:37", stop: "BHARAT NAGAR (J.K. ROAD)", pm: "12:58" },
+          { am: "06:40", stop: "D.K. TOWER (J.K. ROAD)", pm: "12:55" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-60", incharge: "Ms. LATA AHUJA (I/C)", phone: "9977991819",
+        stops: [
+          { am: "06:20", stop: "COMFORT ROYAL AYODHYA BYPASS", pm: "01:15" },
+          { am: "06:22", stop: "AYODHYA EXTENSION", pm: "01:13" },
+          { am: "06:25", stop: "VRINDAVAN NAGAR", pm: "01:10" },
+          { am: "06:30", stop: "KALPANA NG. (INSIDE) / LAXMI NG.", pm: "01:05" },
+          { am: "06:32", stop: "SONAGIRI (INSIDE)", pm: "01:03" },
+          { am: "06:35", stop: "REWA PARISAR", pm: "01:00" },
+          { am: "06:45", stop: "GREEN MEADOWS/OLD JAIL", pm: "12:50" },
+          { am: "06:50", stop: "74 BUNGALOW (NISHAT COLONY)", pm: "12:45" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      },
+      {
+        bus: "S-61", incharge: "Ms. SHAHI SIDDIQUI (I/C)", phone: "9131122638",
+        stops: [
+          { am: "06:20", stop: "RISHI RAJ DENTAL COLLEGE", pm: "01:15" },
+          { am: "06:22", stop: "LAKE PEARL SPRING", pm: "01:13" },
+          { am: "06:25", stop: "RISHI VILLS / COMFORT GREEN", pm: "01:10" },
+          { am: "06:30", stop: "BELLAIRE COLONY", pm: "01:05" },
+          { am: "06:32", stop: "AASHARAM BAPU SQUARE", pm: "01:03" },
+          { am: "06:35", stop: "LAKE PEARLS GARDEN", pm: "01:00" },
+          { am: "06:37", stop: "GULMOHAR GARDEN / FAIZ MASJID", pm: "12:58" },
+          { am: "07:20", stop: "SCHOOL", pm: "12:15", school: true }
+        ]
+      }
+    ];
+
+    // ═══════════════════════════════════════════════════════════
+    //  STATE
+    // ═══════════════════════════════════════════════════════════
+    let currentRole = '';
+
+    // ═══════════════════════════════════════════════════════════
+    //  LOGIN
+    // ═══════════════════════════════════════════════════════════
+    function doLogin() {
+      const role = document.getElementById('roleSelect').value.trim().toLowerCase();
+      const uname = document.getElementById('usernameInput').value.trim().toLowerCase();
+      const errEl = document.getElementById('loginError');
+
+      if (!role) { showErr('Please select a role.'); return; }
+      if (!uname) { showErr('Please enter a username.'); return; }
+
+      if (USERS[role] && USERS[role].includes(uname)) {
+        errEl.style.display = 'none';
+        currentRole = role;
+        showDashboard(role, uname);
+      } else {
+        showErr('❌ Invalid username for the selected role.');
+      }
+    }
+
+    function showErr(msg) {
+      const e = document.getElementById('loginError');
+      e.textContent = msg;
+      e.style.display = 'block';
+    }
+
+    document.getElementById('usernameInput').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') doLogin();
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    //  DASHBOARD
+    // ═══════════════════════════════════════════════════════════
+    function showDashboard(role, uname) {
+      document.getElementById('loginPage').classList.remove('active');
+      document.getElementById('dashPage').classList.add('active');
+
+      const label = role === 'teacher' ? '👩‍🏫 Teacher' : '🎒 Student/Parent';
+      document.getElementById('userChip').innerHTML = `${label}: ${uname}`;
+      document.getElementById('dashTitle').textContent =
+        role === 'teacher' ? '🚌 Bus Route Management' : '🔍 Find My Bus';
+
+      if (role === 'teacher') {
+        buildTeacherGrid();
+        document.getElementById('teacherGrid').style.display = 'block';
+      } else {
+        document.getElementById('teacherGrid').style.display = 'none';
+      }
+      document.getElementById('resultsArea').style.display = 'none';
+      document.getElementById('busInput').value = '';
+    }
+
+    function buildTeacherGrid() {
+      const grid = document.getElementById('allBusesGrid');
+      grid.innerHTML = BUS_DATA.map(b => `
+    <div class="bus-mini-card" onclick="searchSpecific('${b.bus}')">
+      <div class="bnum">${b.bus}</div>
+      <div class="bincharge">${b.incharge}</div>
+    </div>
+  `).join('');
+    }
+
+    function doLogout() {
+      currentRole = '';
+      document.getElementById('dashPage').classList.remove('active');
+      document.getElementById('loginPage').classList.add('active');
+      document.getElementById('roleSelect').value = '';
+      document.getElementById('usernameInput').value = '';
+      document.getElementById('loginError').style.display = 'none';
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  SEARCH
+    // ═══════════════════════════════════════════════════════════
+    function normalize(str) {
+      return str.replace(/[^a-z0-9]/gi, '').toUpperCase();
+    }
+
+    function findBuses(query) {
+      if (!query) return [];
+      const q = normalize(query);
+      return BUS_DATA.filter(b => {
+        const num = normalize(b.bus); // e.g. S1
+        const numOnly = num.replace('S', ''); // e.g. 1
+        return num.includes(q) || numOnly === q || numOnly.startsWith(q);
+      });
+    }
+
+    function liveSearch() {
+      const val = document.getElementById('busInput').value.trim();
+      if (val.length > 0) renderResults(findBuses(val));
+      else {
+        document.getElementById('resultsArea').style.display = 'none';
+      }
+    }
+
+    function searchBus() {
+      const val = document.getElementById('busInput').value.trim();
+      renderResults(findBuses(val));
+    }
+
+    function searchSpecific(busNum) {
+      document.getElementById('busInput').value = busNum;
+      const results = BUS_DATA.filter(b => b.bus === busNum);
+      renderResults(results);
+      document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function renderResults(results) {
+      const area = document.getElementById('resultsArea');
+      const container = document.getElementById('resultsContainer');
+      const title = document.getElementById('resultsTitle');
+
+      area.style.display = 'block';
+      title.textContent = results.length > 0
+        ? `📋 Showing ${results.length} Route${results.length > 1 ? 's' : ''}`
+        : '📋 Search Results';
+
+      if (results.length === 0) {
+        container.innerHTML = `
+      <div class="no-result">
+        <div class="icon">🔍</div>
+        <p>No bus found. Try entering just the number (e.g. <strong>1</strong>, <strong>15</strong>, <strong>S-25</strong>).</p>
+      </div>`;
+        return;
+      }
+
+      container.innerHTML = results.map(b => buildBusCard(b)).join('');
+    }
+
+    function buildBusCard(b) {
+      const attRow = b.attender ? `
+    <div class="attender-info">
+      <div class="label">Lady Attender</div>
+      <div>${b.attender} &nbsp;📞 ${b.attenderPhone}</div>
+    </div>` : '';
+
+      const rows = b.stops.map(s => `
+    <tr class="${s.school ? 'school-row' : ''}">
+      <td class="time">${s.am}</td>
+      <td>${s.stop}</td>
+      <td class="time">${s.pm}</td>
+    </tr>`).join('');
+
+      return `
+    <div class="bus-card">
+      <div class="bus-card-header">
+        <div class="bus-badge">${b.bus}</div>
+        <div class="bus-incharge">
+          <div class="label">Bus Incharge</div>
+          <div class="name">${b.incharge}</div>
+          <div class="phone">📞 ${b.phone}</div>
+        </div>
+        ${attRow}
+      </div>
+      <table class="stops-table">
+        <thead>
+          <tr>
+            <th>To School (AM)</th>
+            <th>Bus Stop</th>
+            <th>To Home (PM)</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+    }
+  </script>
+</body>
+
+</html>
